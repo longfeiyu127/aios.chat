@@ -5,6 +5,7 @@ import { CreateChannel } from './CreateChannel';
 import { EditChannel } from './EditChannel';
 import { useChatContext } from 'stream-chat-react';
 import { StreamChatType } from '../../types';
+import { useTeamContext } from '../../hooks/useTeamContext';
 
 export const AdminPanel = () => {
   const { client, channel } = useChatContext<StreamChatType>();
@@ -14,8 +15,10 @@ export const AdminPanel = () => {
   let defaultFormValues: FormValues = {name: '', members: []};
   let Form = null;
 
+  const { team } = useTeamContext();
+
   if (activeWorkspace.match('Channel-Create')) {
-    defaultFormValues = { members: client.userID ? [client.userID] : [], name: '', team: 'red' };
+    defaultFormValues = { members: client.userID ? [client.userID] : [], name: '', team:team };
     Form = CreateChannel;
   } else if (activeWorkspace.match('Channel-Edit')) {
     defaultFormValues= { members: [], name: channel?.data?.name || (channel?.data?.id as string), };

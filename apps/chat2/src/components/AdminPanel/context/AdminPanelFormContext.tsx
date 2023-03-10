@@ -11,6 +11,7 @@ import {
 import { Workspace } from '../../../context/WorkspaceController';
 import { useChatContext } from 'stream-chat-react';
 import { StreamChatType } from '../../../types';
+import { useTeamContext } from '../../../hooks/useTeamContext';
 
 type UpsertChannelParams = { name: string, members: string[], team?: string };
 
@@ -68,7 +69,6 @@ export const AdminPanelForm = ({ children, defaultValues, workspace, onSubmit }:
   const { client, channel, setActiveChannel } = useChatContext<StreamChatType>();
   const [name, setChannelName] = useState<string>(defaultValues.name);
   const [members, setMembers] = useState<string[]>(defaultValues.members);
-  const [team, setTeam] = useState<string|undefined>(defaultValues.team);
   const [errors, setErrors] = useState<FormErrors>({ name: null, members: null });
 
   const createChannelType = getChannelTypeFromWorkspaceName(workspace);
@@ -122,6 +122,8 @@ export const AdminPanelForm = ({ children, defaultValues, workspace, onSubmit }:
     return Object.values(errors).some(v => !!v) ?  errors : null;
   }, [defaultValues.name]);
 
+  const { team } = useTeamContext();
+
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = useCallback(async (event) => {
     event.preventDefault();
     const errors = validateForm({values: {name, members}, action, createChannelType});
@@ -132,13 +134,13 @@ export const AdminPanelForm = ({ children, defaultValues, workspace, onSubmit }:
     }
 
     try {
-      if (action === 'create') await createChannel({ name, members, team: "red" });
+      if (action === 'create') await createChannel({ name, members, team });
       if (action === 'update') await updateChannel({ name, members });
       onSubmit();
     } catch (err) {
       console.error(err);
     }
-  }, [action, createChannelType, name, members, createChannel, updateChannel, onSubmit, validateForm]);
+  }, [action, createChannelType, name, members, createChannel, updateChannel, onSubmit, validateForm, team]);
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
     event.preventDefault();

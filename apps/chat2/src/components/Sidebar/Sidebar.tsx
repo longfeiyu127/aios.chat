@@ -6,24 +6,24 @@ import { ChannelPreview } from '../ChannelPreview/ChannelPreview';
 
 import { CompanyLogo } from './icons';
 
-import type { Channel, ChannelFilters } from 'stream-chat';
+import type { Channel, ChannelFilters, OwnUserResponse, ConnectionOpen, ExtendableGenerics, DefaultGenerics } from 'stream-chat';
 import { ChannelSort } from 'stream-chat';
 
 import { StreamChatType } from '../../types';
+import { client, connectUserPromise } from '../../common/client';
+import { useEffect, useState } from 'react';
+import { useTeamContext } from '../../hooks/useTeamContext';
 
 const filters: ChannelFilters[] = [
-  // $in: [<user_teams>]
-  { type: 'team', demo: 'team', team: {$in: ["red"]}  },
-  { type: 'messaging', demo: 'team' },
+  { type: 'team', demo: 'team', team: {$in: [""]}  },
+  { type: 'messaging', demo: 'team', team: {$in: [""]} },
 ];
 const options = { state: true, watch: true, presence: true, limit: 3 };
 const sort: ChannelSort<StreamChatType> = { last_message_at: -1, updated_at: -1 };
 
-const FakeCompanySelectionBar = () => (
+const FakeCompanySelectionBar = (props: { children: React.ReactNode }) => (
   <div className='sidebar__company-selection-bar'>
-    <div className='sidebar__company-badge'>
-        <CompanyLogo />
-    </div>
+    { props.children }
   </div>
 );
 
@@ -37,10 +37,13 @@ const customChannelMessagingFilter = (channels: Channel[]) => {
   return channels.filter((channel) => channel.type === 'messaging');
 };
 
-const TeamChannelsList = () => (
-  <ChannelList
+const TeamChannelsList = () => {
+  const { team } = useTeamContext();
+  const filters = { type: 'team', demo: 'team', team: {$in: [team]}  };
+
+  return <ChannelList
     channelRenderFilterFn={customChannelTeamFilter}
-    filters={filters[0]}
+    filters={filters}
     options={options}
     sort={sort}
     List={(listProps) => (
@@ -56,7 +59,7 @@ const TeamChannelsList = () => (
       />
     )}
   />
-);
+};
 
 const MessagingChannelsList = () => (
   <ChannelList
@@ -81,16 +84,29 @@ const MessagingChannelsList = () => (
 )
 
 export const Sidebar = () => {
+  const { user, team, setTeam } = useTeamContext()
   return (
     <div className='sidebar'>
-      <FakeCompanySelectionBar />
+      <FakeCompanySelectionBar>
+        <div>
+          {
+            user?.teams?.map((team) => {
+              return <div  key={team} className='sidebar__company-badge mb-4 cursor-pointer' onClick={() => {
+                setTeam(team)
+              }}>
+                  {team}
+              </div>
+            })
+          }
+        </div>
+      </FakeCompanySelectionBar>
       <div className='channel-list-bar'>
-        <div className='channel-list-bar__header'>
-          <p className='channel-list-bar__header__text'>Worksly</p>
+        <div className='channel-list-bar__header flex justify-center items-center'>
+          <p className='channel-list-bar__header__text'>{ team }</p>
         </div>
         <ChannelSearch />
         <TeamChannelsList/>
-        <MessagingChannelsList/>
+        {/* <MessagingChannelsList/> */}
       </div>
     </div>
   );

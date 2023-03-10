@@ -2,8 +2,22 @@ module.exports = {
   reactStrictMode: true,
   // '@douyinfe/semi-illustrations'
   transpilePackages: ['@douyinfe/semi-ui', '@douyinfe/semi-icons'],
+  env: {
+    NEXT_PUBLIC_ANALYTICS_ID: 'prod',
+  },
+  "pipeline": {
+    "build": {
+      "env": [
+        "NEXT_PUBLIC_ANALYTICS_ID"
+      ]
+    }
+  },
+  "globalDependencies": [
+    ".env.prod",
+    ".env", // contents will impact hashes of all tasks
+    // "tsconfig.json" // contents will impact hashes of all tasks
+  ],
   async rewrites() {
-    console.log('rewrites')
     return {
       // After checking all Next.js pages (including dynamic routes)
       // and static files we proxy any other requests

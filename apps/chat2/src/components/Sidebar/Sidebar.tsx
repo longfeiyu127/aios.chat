@@ -40,6 +40,9 @@ const customChannelMessagingFilter = (channels: Channel[]) => {
 const TeamChannelsList = () => {
   const { team } = useTeamContext();
   const filters = { type: 'team', demo: 'team', team: {$in: [team]}  };
+  if (!team) {
+    return null;
+  }
 
   return <ChannelList
     channelRenderFilterFn={customChannelTeamFilter}
@@ -106,7 +109,7 @@ export const Sidebar = () => {
         </div>
         <ChannelSearch />
         <TeamChannelsList/>
-        {/* <MessagingChannelsList/> */}
+        <MessagingChannelsList/>
       </div>
     </div>
   );

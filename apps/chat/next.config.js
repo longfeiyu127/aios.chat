@@ -17,19 +17,20 @@ module.exports = {
     ".env", // contents will impact hashes of all tasks
     // "tsconfig.json" // contents will impact hashes of all tasks
   ],
-  async rewrites() {
-    return {
-      // After checking all Next.js pages (including dynamic routes)
-      // and static files we proxy any other requests
-      fallback: [
-        {
-          source: '/:path*',
-          // destination: `https://config.aioschat.com/:path*`,
-          destination: `https://test.pandateacher.com/:path*`,
-          // source: '/biz',
-          // destination: `https://test.pandateacher.com/biz`,
-        },
-      ],
-    }
-  },
+  // async rewrites() {
+  //   return {
+  //     // After checking all Next.js pages (including dynamic routes)
+  //     // and static files we proxy any other requests
+  //     fallback: [
+  //       {
+  //         source: '/:path*',
+  //         // destination: `https://config.aioschat.com/:path*`,
+  //         destination: `https://api.aioschat.com/`,
+  //         // destination: `https://test.pandateacher.com/:path*`,
+  //         // source: '/biz',
+  //         // destination: `https://test.pandateacher.com/biz`,
+  //       },
+  //     ],
+  //   }
+  // },
 };

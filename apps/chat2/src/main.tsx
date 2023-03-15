@@ -18,8 +18,6 @@ import 'tailwindcss/tailwind.css'
 
 import './styles/index.scss';
 
-console.log("12312312---")
-
 createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
     <App />

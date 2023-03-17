@@ -5,5 +5,6 @@ module.exports = {
     "react/no-unescaped-entities": "off",
     "@next/next/no-page-custom-font": "off",
     "turbo/no-undeclared-env-vars": "off",
+    "react/display-name": "off",
   }
 };

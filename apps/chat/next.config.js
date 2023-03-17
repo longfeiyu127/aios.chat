@@ -1,9 +1,15 @@
+const path = require('path')
+
+
 module.exports = {
   reactStrictMode: true,
   // '@douyinfe/semi-illustrations'
   transpilePackages: ['@douyinfe/semi-ui', '@douyinfe/semi-icons'],
   env: {
     NEXT_PUBLIC_ANALYTICS_ID: 'prod',
+  },
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')],
   },
   "pipeline": {
     "build": {

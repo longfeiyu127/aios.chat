@@ -1,5 +1,6 @@
 import axios from "axios";
 import https from "https";
+import { log } from "logger";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { encode } from "../../common/encoder/encoder";
 import { StreamChat } from "stream-chat";
@@ -113,8 +114,8 @@ const client = axios.create({
  */
 
 const sendMsg = async (id: string, msg: string) => {
-  console.log("id", id);
-  console.log("msg", msg);
+  log(`id: ${id}`);
+  log(`msg: ${msg}`);
   const client = new StreamChat(
     process.env.STREAM_CHAT_API_KEY!,
     process.env.STREAM_CHAT_API_SECRET,
@@ -154,7 +155,7 @@ export default async function handle(
       client
         .post("https://api.aioschat.com", data, {})
         .then((res) => {
-          console.log("res", res.status);
+          log(`res: ${res.status}`);
           if (
             res.status === 200 &&
             res.data?.choices &&
@@ -164,11 +165,12 @@ export default async function handle(
               ?.trimStart()
               .replace(/\n{1,}/g, "")
               .replace(/'/g, '"');
-            console.log("text", text);
+            log(`text ${text}`);
             text && sendMsg(req.body.channel_id, text);
           }
         })
         .catch((err) => {
+          log(`err aioschat: ${err}`);
           console.log("err", err);
         });
 
